@@ -5,6 +5,9 @@ import requests
 
 class Api:
     
+    def __init__(self):
+        self.token="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"
+    
     def sentiment(self,text):
         text1=text
         response=TextBlob(text1).sentiment
@@ -46,7 +49,7 @@ class Api:
 
         API_URL = "https://api-inference.huggingface.co/models/bhadresh-savani/distilbert-base-uncased-emotion"
         headers = {
-            "Authorization": "Bearer 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"
+            "Authorization": f"Bearer {self.token}"
         }
 
         payload = {"inputs": text}
@@ -59,8 +62,8 @@ class Api:
         
     def summarizerapi(self, text):
         API_URL="https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
-        headers={"Authorization": 
-            "Bearer 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"}
+        headers={
+            "Authorization": f"Bearer {self.token}"}
         
         payload={"inputs": text}
         respose=requests.post(API_URL, headers=headers,json=payload)

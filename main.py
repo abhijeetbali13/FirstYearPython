@@ -102,9 +102,12 @@ def emotion():
             return render_template("home.html", noresult_emotion="Please enter the text" ,selected_analysis="emotion")
         else:
             response=ap.emotion(text)
+            
             if isinstance(response, list) and len(response) == 1 and isinstance(response[0], list):
                 response = response[0]
-            return render_template("home.html",result_emotion=response, selected_analysis="emotion")
+            return render_template("home.html", result_emotion=response, selected_analysis="emotion")
+
+        
     except Exception as e:
         return render_template("home.html", noresult_emotion="Some Error occur" ,selected_analysis="emotion")
         
