@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | Text Analysis App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        .intro {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #555;
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(103, 126, 234, 0.1);
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            color: #2c3e50;
+            margin: 30px 0 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h3::before {
+            content: '';
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        ul {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        li {
+            background: #f8f9fa;
+            margin: 10px 0;
+            padding: 15px 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        li::before {
+            content: '✓';
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        li:hover {
+            background: #e8f4f8;
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(103, 126, 234, 0.2);
+        }
+
+        .features-section, .tech-section {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 1px solid rgba(103, 126, 234, 0.2);
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .back-link a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 12px 30px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(103, 126, 234, 0.3);
+        }
+
+        .back-link a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(103, 126, 234, 0.4);
+            background: linear-gradient(135deg, #764ba2, #667eea);
+        }
+
+        .back-link a::before {
+            content: '←';
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .back-link a:hover::before {
+            transform: translateX(-3px);
+        }
+
+        .about-link {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 1000;
+        }
+
+        .about-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .about-link a:hover {
+            background-color: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(103, 126, 234, 0.3);
+        }
+
+        .app-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .info-card {
+            background: linear-gradient(135deg, rgba(103, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid rgba(103, 126, 234, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Developer Section Styles */
+        .developer-info {
+            margin-top: 10px;
+        }
+
+        .developer-card {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(103, 126, 234, 0.1);
+        }
+
+        .developer-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .avatar-icon {
+            font-size: 2rem;
+            color: white;
+        }
+
+        .developer-details h4 {
+            font-size: 1.3rem;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .developer-title {
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .developer-description {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+
+        .developer-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .dev-link {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 0.8rem;
+            padding: 4px 12px;
+            background: rgba(103, 126, 234, 0.1);
+            border-radius: 15px;
+            border: 1px solid rgba(103, 126, 234, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .dev-link:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .intro {
+                font-size: 1rem;
+                padding: 15px;
+            }
+
+            .app-info {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .developer-card {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .developer-avatar {
+                width: 70px;
+                height: 70px;
+            }
+
+            .avatar-icon {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        .fade-in:nth-child(2) { animation-delay: 0.2s; }
+        .fade-in:nth-child(3) { animation-delay: 0.4s; }
+        .fade-in:nth-child(4) { animation-delay: 0.6s; }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>About This App</h1>
+        
+        <div class="intro fade-in">
+            This web app is built using Flask and Hugging Face models to perform real-time text analysis with advanced natural language processing capabilities.
+        </div>
+
+        <div class="app-info">
+            <div class="info-card fade-in">
+                <h3>🚀 Features</h3>
+                <ul>
+                    <li>Text Summarization for concise content extraction</li>
+                    <li>Emotion Analysis using advanced sentiment detection</li>
+                    <li>Emotion detection using Hugging Face Transformers</li>
+                    <li>NER (Named Entity Recognition)</li>
+                    <li>User login system</li>
+                    <li>Real-time text processing</li>
+                    <li>Interactive dashboard</li>
+                </ul>
+            </div>
+
+            <div class="info-card fade-in">
+                <h3>🛠️ Technologies Used</h3>
+                <ul>
+                    <li>Python + Flask framework</li>
+                    <li>HTML5, CSS3 & JavaScript</li>
+                    <li>Hugging Face Transformers API</li>
+                    <li>Machine Learning models</li>
+                    <li>Modern web technologies</li>
+                </ul>
+            </div>
+
+            <div class="info-card fade-in">
+                <h3>👨‍💻 Developer</h3>
+                <div class="developer-info">
+                    <div class="developer-card">
+                        <div class="developer-avatar">
+                            <span class="avatar-icon">👤</span>
+                        </div>
+                        <div class="developer-details">
+                            <h4>Abhijeet singh bali</h4>
+                            <p class="developer-title">Full Stack Developer</p>
+                            <p class="developer-description">
+                                Passionate about AI/ML . 
+                                
+                            </p>
+                            <div class="developer-links">
+                                <a href="https://github.com/abhijeetbali13" class="dev-link">GitHub</a>
+                                <a href="#" class="dev-link">LinkedIn</a>
+                                <a href="#" class="dev-link">Portfolio</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="back-link fade-in">
+            <a href="/home">Back to Home</a>
+        </div>
+    </div>
+
+    <div class="about-link">
+        <a href="/about">About</a>
+    </div>
+</body>
+</html>

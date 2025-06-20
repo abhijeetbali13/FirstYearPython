@@ -6,7 +6,7 @@ import requests
 class Api:
     
     def __init__(self):
-        self.token="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"
+        self.token="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"
     
     def sentiment(self,text):
         text1=text

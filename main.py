@@ -15,6 +15,11 @@ ap=Api()
 def login():
     return render_template("login.html")
 
+#about
+@app.route("/about")
+def about():
+    return render_template("about.html")
+
 
 #logout
 @app.route("/logout")
