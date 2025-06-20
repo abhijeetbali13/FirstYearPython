@@ -1,7 +1,7 @@
 from textblob import TextBlob
 import spacy 
 import requests
-
+import os
 
 
 class Api:
