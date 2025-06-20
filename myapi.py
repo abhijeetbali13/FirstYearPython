@@ -70,16 +70,7 @@ class Api:
         else:
             return "Error"
         
-    def summarizer(self, text):
-        print("succes hit")
-        from transformers import pipeline
-        summarizer= pipeline("summarization")
-        
-        summary=summarizer(text, max_length=130 , min_length=30, do_sample=False)
-        print("analysis hit")
-        return summary[0]["summary_text"]
-
-        
+   
 
                         
             
