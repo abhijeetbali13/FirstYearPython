@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TextCraft</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Radio buttons for navigation -->
+        <input type="radio" id="sentiment" name="analysis" {% if selected_analysis == 'sentiment' %}checked{% endif %}>
+        <input type="radio" id="ner" name="analysis" {% if selected_analysis == 'ner' %}checked{% endif %}>
+        <input type="radio" id="emotion" name="analysis" {% if selected_analysis == 'emotion' %}checked{% endif %}>
+        <input type="radio" id="summary" name="analysis" {% if selected_analysis == 'summary' %}checked{% endif %}>
+
+        <div class="top-header">
+            🔍 Advanced Text Analysis Suite
+        </div>
+
+        <div class="content-wrapper">
+            <div class="sidebar">
+                <h2>📊 Analysis</h2>
+                
+                <label for="sentiment">
+                    💭 Sentiment Analysis
+                </label>
+                
+                <label for="ner">
+                    🏷️ Named Entity Recognition
+                </label>
+                
+                <label for="emotion">
+                    😊 Emotion Detection
+                </label>
+                
+                <label for="summary">
+                    📝 Text Summarization
+                </label>
+            </div>
+
+            <div class="main-content">
+                <div class="welcome">Welcome {{ name }} to Text Analysis</div>
+                
+                <!-- Sentiment Analysis Section -->
+                <div class="desc description" id="desc-sentiment">
+                    <strong>Sentiment Analysis</strong> determines whether the text expresses positive, negative, or neutral emotions. Useful for understanding customer feedback, social media posts, and reviews.
+                    
+                    <div class="input-section">
+                        <form action="/analyze/sentiment" method="POST">
+                            <label for="sentiment-text">Enter your text:</label>
+                            <textarea id="sentiment-text" name="sentiment" placeholder="Enter text for Sentiment Analysis..." rows="6"></textarea>
+                            
+                            {% if result %}
+                            <div class="results-section" style="display: block;">
+                                <h3>Analysis Results:</h3>
+                                <div class="result-content">
+                                    <div class="sentiment-result">
+                                        <strong>Polarity:</strong> <span class="sentiment-{{ result['polarity'].lower() }}">{{ result['polarity'] }}</span> ({{ result['polarity_score'] }})<br>
+                                        <strong>Subjectivity:</strong> {{ result['subjectivity'] }} ({{ result['subjectivity_score'] }})
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            {% if noresult %}
+                            <div class="results-section" style="display: block;">
+                                <h3>Analysis Results:</h3>
+                                <div class="result-content">{{ noresult }}</div>
+                            </div>
+                            {% endif %}
+                            
+                            <input type="submit" value="Analyze Sentiment">
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Named Entity Recognition Section -->
+                <div class="desc description" id="desc-ner">
+                    <strong>Named Entity Recognition</strong> extracts and classifies entities such as names of people, organizations, locations, dates, etc., from text. This helps in structuring unstructured data.
+                    
+                    <div class="input-section">
+                        <form action="/ner" method="POST">
+                            <label for="ner-text">Enter your text:</label>
+                            <textarea id="ner-text" name="ner" placeholder="Enter text for Named Entity Recognition..." rows="6"></textarea>
+                            
+                            {% if result_ner %}
+                            <div class="results-section" style="display: block;">
+                                <h3>Analysis Results:</h3>
+                                <div class="result-content">
+                                    <div class="entity-results">
+                          
+                                              {% for label, entities in result_ner.items() %}
+                                                  {% for entity in entities %}
+                                                      <span class="entity-tag entity-{{ label|lower }}" color:#>{{ label }}: ({{ entity }})</span>
+                                                  {% endfor %}
+                                              {% endfor %}
+
+
+
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            {% if noresult_ner %}
+                            <div class="results-section" style="display: block;">
+                                <h3>Analysis Results:</h3>
+                                <div class="result-content">{{ noresult_ner }}</div>
+                            </div>
+                            {% endif %}
+                            
+                            <input type="submit" value="Extract Entities">
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Emotion Detection Section -->
+                <div class="desc description" id="desc-emotion">
+                    <strong>Emotion Detection</strong> identifies emotions like happiness, sadness, anger, or fear expressed in the text, providing deeper insight beyond basic sentiment.
+                    
+                    <div class="input-section">
+                        <form action="/emotion" method="POST">
+                            <label for="emotion-text">Enter your text:</label>
+                            <textarea id="emotion-text" name="emotion" placeholder="Enter text for Emotion Detection..." rows="6"></textarea>
+                            
+                            {% if result_emotion %}
+                            <div class="results-section" style="display: block;">
+                                <h3>Analysis Results:</h3>
+                                <div class="result-content">
+                                    <div class="emotion-results">
+                                        {% for emotion in result_emotion %}
+                                            <div class="emotion-item">
+                                                <span class="emotion-tag">{{ emotion["label"] | capitalize }}</span>
+                                                <span class="emotion-score">{{ "%.2f"|format(emotion["score"]) }}</span>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            {% if noresult_emotion %}
+                            <div class="results-section" style="display: block;">
+                                <h3>Analysis Results:</h3>
+                                <div class="result-content">{{ noresult_emotion }}</div>
+                            </div>
+                            {% endif %}
+                            
+                            <input type="submit" value="Detect Emotions">
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Text Summarization Section -->
+                <div class="desc description" id="desc-summary">
+                    <strong>Text Summarization</strong> automatically generates a shorter version of the text, capturing the main points to save time and improve readability.
+                    
+                    <div class="input-section">
+                        <form action="/summary" method="POST">
+                            <label for="summary-text">Enter your text:</label>
+                            <textarea id="summary-text" name="summary" placeholder="Enter text for Summarization..." rows="6"></textarea>
+                            
+                            {% if result_summary %}
+                            <div class="results-section" style="display: block;">
+                                <h3>Analysis Results:</h3>
+                                <div class="result-content">
+                                    <div class="summary-result">
+                                        {{ result_summary }}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            {% if noresult_summary %}
+                            <div class="results-section" style="display: block;">
+                                <h3>Analysis Results:</h3>
+                                <div class="result-content">{{ noresult_summary }}</div>
+                            </div>
+                            {% endif %}
+                            
+                            <input type="submit" value="Generate Summary">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <form action="/logout" method="get" class="logout-form">
+            <input type="submit" value="🚪 Logout">
+        </form>
+    </div>
+</body>
+</html>
