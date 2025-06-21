@@ -9,7 +9,7 @@ app.secret_key = "hithisissingh9103414128"
 db = Database()
 ap = Api()
 
-# Decorator to restrict access to logged-in users
+
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -79,35 +79,6 @@ def sentiment():
     return render_template("home.html", result=response, name=name)
 
 
-# Optional (future support if needed)
-@app.route("/analyze/ner", methods=["POST"])
-@login_required
-def ner():
-    text = request.form.get("ner")
-    name = session["user_name"]
-    # Dummy logic, replace with real implementation later
-    result = {"entities": ["Example Entity"]}
-    return render_template("home.html", ner_result=result, name=name)
-
-
-@app.route("/analyze/emotion", methods=["POST"])
-@login_required
-def emotion():
-    text = request.form.get("emotion")
-    name = session["user_name"]
-    # Dummy logic, replace with real implementation later
-    result = {"emotion": "Happy"}
-    return render_template("home.html", emotion_result=result, name=name)
-
-
-@app.route("/analyze/summary", methods=["POST"])
-@login_required
-def summary():
-    text = request.form.get("summary")
-    name = session["user_name"]
-    # Dummy logic, replace with real implementation later
-    result = {"summary": "This is a summary."}
-    return render_template("home.html", summary_result=result, name=name)
 
 
 if __name__ == "__main__":
